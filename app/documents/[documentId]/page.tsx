@@ -12,7 +12,7 @@ const DocumentId: React.FC<DocumentIdProps> = async ({ params }) => {
     const { documentId } = await params;
 
     console.log(documentId)
-
+    
     return (
         <div className="min-h-screen bg-[#FAFBFD]">
             <div className=" flex flex-col px-4 gap-y-2 fixed top-0 left-0 right-0 z-10 bg-[#FAFBFD] print:hidden">
