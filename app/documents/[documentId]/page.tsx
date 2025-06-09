@@ -1,5 +1,6 @@
 import Editor from "./components/editor";
 import { Navbar } from "./components/navbar";
+import { Room } from "./components/room";
 import Toolbar from "./components/toolbar";
 
 interface DocumentIdProps {
@@ -19,7 +20,9 @@ const DocumentId: React.FC<DocumentIdProps> = async ({ params }) => {
                 <Toolbar />
             </div>
             <div className="pt-[114px] print:pt-0">
-                <Editor />
+                <Room>
+                    <Editor />
+                </Room>
             </div>
         </div>
     );

@@ -6,6 +6,7 @@ import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarSub, Menub
 import { BoldIcon, FileIcon, FileJsonIcon, FilePenIcon, FilePlusIcon, FileTextIcon, GlobeIcon, ItalicIcon, PrinterIcon, Redo, RemoveFormattingIcon, StrikethroughIcon, TextIcon, TrashIcon, UnderlineIcon, Undo } from "lucide-react";
 import { BsFilePdf } from "react-icons/bs";
 import { useEditorStore } from "@/store/use-editor-store";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 
 
 export const Navbar = () => {
@@ -87,7 +88,7 @@ export const Navbar = () => {
                                                 <GlobeIcon className="size-4 mr-2" />
                                                 HTML
                                             </MenubarItem>
-                                            <MenubarItem onClick={()=>window.print()}>
+                                            <MenubarItem onClick={() => window.print()}>
                                                 <BsFilePdf className="size-4 mr-2" />
                                                 PDF
                                             </MenubarItem>
@@ -186,6 +187,15 @@ export const Navbar = () => {
                         </Menubar>
                     </div>
                 </div>
+            </div>
+            <div className="flex items-center gap-3 pl-6">
+                <OrganizationSwitcher
+                    afterCreateOrganizationUrl="/"
+                    afterLeaveOrganizationUrl="/"
+                    afterSelectOrganizationUrl="/"
+                    afterSelectPersonalUrl="/"
+                />
+                <UserButton />
             </div>
         </nav>
     )

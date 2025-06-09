@@ -28,7 +28,7 @@ export function RemoveDialog(
         children,
     }: RemoveDialogProps
 ) {
-    const remove=useMutation(api.documents.removeById);
+    const remove = useMutation(api.documents.removeById);
     const [isRemoving, setIsRemoving] = useState(false);
 
     return (
@@ -49,9 +49,10 @@ export function RemoveDialog(
                         (e) => {
                             e.stopPropagation();
                             setIsRemoving(true);
-                            remove({id:documentId})
-                            .then(()=>toast.success("Document Removed!"))
-                            .finally(()=>setIsRemoving(false))
+                            remove({ id: documentId })
+                                .catch(() => toast.error("Something went wrong!"))
+                                .then(() => toast.success("Document Removed!"))
+                                .finally(() => setIsRemoving(false))
                         }
                     } className="hover:bg-red-600 bg-red-400">Confirm</AlertDialogAction>
                 </AlertDialogFooter>

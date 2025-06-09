@@ -38,6 +38,7 @@ export const RenameDailog = ({
         e.preventDefault();
         setIsSubmiting(true);
         update({ id, title: newTitle.trim()})
+        .catch(()=>toast.error("Something went wrong!"))
         .then(()=>toast.success("Title Renamed."))
         .finally(()=>{
             setIsSubmiting(false);
