@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { api } from "@/convex/_generated/api";
@@ -13,29 +12,25 @@ export async function getDocuments(ids: Id<"documents">[]) {
 }
 
 export async function getUsers() {
-  try {
-    const { sessionClaims } = await auth();
-    const clerk = await clerkClient();
-    const org_id: {
-      id: string;
-    } = sessionClaims?.o as { id: string };
+  const { sessionClaims } = await auth();
+  const clerk = await clerkClient();
+  const org_id: {
+    id: string;
+  } = sessionClaims?.o as { id: string };
 
-    const response = await clerk.users.getUserList({
-      organizationId: [org_id.id],
-    });
+  const response = await clerk.users.getUserList({
+    organizationId: [org_id.id],
+  });
 
-    const users = response.data.map((user) => ({
-      id: user.id,
-      name:
-        user.fullName ??
-        user.primaryEmailAddress?.emailAddress.split("@")[0] ??
-        "Anonymous",
-      avatar: user.imageUrl,
-      color: "",
-    }));
+  const users = response.data.map((user) => ({
+    id: user.id,
+    name:
+      user.fullName ??
+      user.primaryEmailAddress?.emailAddress.split("@")[0] ??
+      "Anonymous",
+    avatar: user.imageUrl,
+    color:"",
+  }));
 
-    return users;
-  } catch(e:any){
-    return e;
-  }
+  return users;
 }
