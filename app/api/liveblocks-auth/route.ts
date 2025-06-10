@@ -46,7 +46,7 @@ export async function POST(req: Request) {
   const session = liveblocks.prepareSession(user.id, {
     userInfo: {
       name:
-        user.fullName ?? user.primaryEmailAddress?.emailAddress ?? "Anonymous",
+        user.fullName ?? user.primaryEmailAddress?.emailAddress.split("@")[0] ?? "Anonymous",
       avatar: user.imageUrl,
     },
   });
