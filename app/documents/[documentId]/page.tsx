@@ -1,31 +1,32 @@
-import Editor from "./components/editor";
-import { Navbar } from "./components/navbar";
-import { Room } from "./components/room";
-import Toolbar from "./components/toolbar";
+"use server"
+import { Id } from "@/convex/_generated/dataModel";
+import { auth } from "@clerk/nextjs/server";
+import Document from "./components/document";
+import { preloadQuery } from "convex/nextjs";
+import { api } from "@/convex/_generated/api";
 
 interface DocumentIdProps {
-    params: Promise<{ documentId: string }>
+    params: Promise<{ documentId: Id<"documents"> }>
 }
 
 const DocumentId: React.FC<DocumentIdProps> = async ({ params }) => {
 
     const { documentId } = await params;
+    const { getToken } = await auth();
 
-    console.log(documentId)
+    const token = await getToken({ template: "convex" }) ?? undefined;
 
-    return (
-        <Room>
-            <div className="min-h-screen bg-[#FAFBFD]">
-                <div className=" flex flex-col px-4 gap-y-2 fixed top-0 left-0 right-0 z-10 bg-[#FAFBFD] print:hidden">
-                    <Navbar />
-                    <Toolbar />
-                </div>
-                <div className="pt-[114px] print:pt-0">
-                    <Editor />
-                </div>
-            </div>
-        </Room>
-    );
+    if (!token) {
+        throw new Error("Unauthorized!");
+    }
+
+    const preloadedDocument = await preloadQuery(
+        api.documents.getById,
+        { id: documentId },
+        { token }
+    )
+
+    return (<Document preloadedDocument={preloadedDocument} />);
 }
 
 export default DocumentId;
