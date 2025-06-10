@@ -10,7 +10,7 @@ export function Threads({ editor }: { editor: Editor | null }) {
   const { threads } = useThreads({ query: { resolved: false } });
 
   return (
-    <>
+    <div className="print:hidden">
       <div className="anchored-threads">
         <AnchoredThreads editor={editor} threads={threads} />
       </div>
@@ -20,6 +20,6 @@ export function Threads({ editor }: { editor: Editor | null }) {
         className="floating-threads"
       />
       <FloatingComposer editor={editor} className="floating-composer" />
-    </>
+    </div>
   );
 }
