@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { ReactNode, useEffect, useMemo, useState } from "react";
@@ -12,7 +13,7 @@ import { getDocuments, getUsers } from "../actions/action";
 import { toast } from "sonner";
 import { Id } from "@/convex/_generated/dataModel";
 
-type User = { id: string, name: string, avatar: string,color:string }
+type User = { id: string, name: string, avatar: string, color: string }
 
 export function Room({ children }: { children: ReactNode }) {
 
@@ -23,8 +24,9 @@ export function Room({ children }: { children: ReactNode }) {
     const fetchUsers = useMemo(
         () => async () => {
             try {
-                const list = await getUsers();
-                setUsers(list);
+                const list: User[] | any = await getUsers();
+                if(list)setUsers(list);
+                else toast.error(list);
             } catch {
                 toast.error("Failed to fetch users!");
             }
@@ -46,8 +48,14 @@ export function Room({ children }: { children: ReactNode }) {
                 const response = await fetch(endpoint, {
                     method: "POST",
                     body: JSON.stringify({ room })
-                })
-                return await response.json();
+                }).then(
+                    async (res)=>{
+                        return await res.json()
+                    }
+                ).catch(
+                    (e)=>toast.error(`${e}`)
+                )
+                return response;
             }}
             resolveUsers={({ userIds }) => {
                 return userIds.map(
@@ -64,13 +72,13 @@ export function Room({ children }: { children: ReactNode }) {
             resolveRoomsInfo={async ({ roomIds }) => {
                 const documents = await getDocuments(roomIds as Id<"documents">[]);
                 console.log(documents)
-                return documents.map((document:{id:string,name:string}) => ({
+                return documents.map((document: { id: string, name: string }) => ({
                     id: document.id,
-                    name:document.name
+                    name: document.name
                 }))
             }}
         >
-            <RoomProvider id={params.documentId as string} initialStorage={{leftMargin:56,rightMargin:56}}>
+            <RoomProvider id={params.documentId as string} initialStorage={{ leftMargin: 56, rightMargin: 56 }}>
                 <ClientSideSuspense fallback={<FullscreenLoader label="Room Loading..." />}>
                     {children}
                 </ClientSideSuspense>
