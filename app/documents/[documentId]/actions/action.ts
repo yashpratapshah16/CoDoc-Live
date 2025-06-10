@@ -29,6 +29,7 @@ export async function getUsers() {
       user.primaryEmailAddress?.emailAddress.split("@")[0] ??
       "Anonymous",
     avatar: user.imageUrl,
+    color:"",
   }));
 
   return users;

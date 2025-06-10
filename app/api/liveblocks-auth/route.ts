@@ -24,7 +24,6 @@ export async function POST(req: Request) {
 
   const { room } = await req.json();
 
-
   const document = await convex.query(api.documents.getById, { id: room });
 
   if (!document) {
@@ -43,11 +42,22 @@ export async function POST(req: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
+  const name =
+    user.fullName ??
+    user.primaryEmailAddress?.emailAddress.split("@")[0] ??
+    "Anonymous";
+
+  const nameToNumber = name
+    .split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const hue = Math.abs(nameToNumber) % 360;
+  const color = `hsl(${hue},80%,60%)`;
+
   const session = liveblocks.prepareSession(user.id, {
     userInfo: {
-      name:
-        user.fullName ?? user.primaryEmailAddress?.emailAddress.split("@")[0] ?? "Anonymous",
+      name,
       avatar: user.imageUrl,
+      color,
     },
   });
   session.allow(room, session.FULL_ACCESS);
